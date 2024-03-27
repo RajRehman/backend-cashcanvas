@@ -16,6 +16,15 @@ const con = require('./db/connection.js');
 //using routes
 app.use(require('./routes/route.js'));
 
+// This should be after other middleware and routes (added new lines 20-26)
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '../clientfe/build')));
+  
+    app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../clientfe', 'build', 'index.html'));
+    });
+  }
+
 con.then(db => {
     if(!db) return process.exit(1);
 
